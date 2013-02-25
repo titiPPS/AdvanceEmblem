@@ -13,7 +13,6 @@ import java.util.Scanner;
 
 import ui.DialogATQ;
 import ui.GUI;
-import ui.ModelDialogATQ;
 import ui.GUI.*;
 
 import engine.Agent;

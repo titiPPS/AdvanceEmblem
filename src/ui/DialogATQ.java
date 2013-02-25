@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,8 +12,6 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.JTable;
-
 import engine.Agent;
 import engine.Terrain;
 import java.awt.Font;
@@ -21,14 +20,23 @@ import javax.swing.SwingConstants;
 
 public class DialogATQ extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1769456378631850670L;
+	
 	private final JPanel contentPanel = new JPanel();
-	String[] columnNames = {"","Joueur","Ennemi"};
+
 	private JButton btnUP,btnDOWN,btnLEFT,btnRIGHT;
 	private JLabel lblAgent;
 	
 	private Agent agent;
 	private Terrain tCentral,tUP,tDOWN,tLEFT,tRIGHT;
 	private Terrain result;
+	private JLabel lblDegatsEnnemi;
+	private JLabel lblDegatsAgent;
+	private JLabel lblEnnemi;
+	private JButton okButton;
 	/**
 	 * Launch the application.
 	 */
@@ -46,6 +54,7 @@ public class DialogATQ extends JDialog {
 	 * Create the dialog.
 	 */
 	public DialogATQ() {
+		result = null;
 		setBounds(100, 100, 344, 160);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -57,8 +66,13 @@ public class DialogATQ extends JDialog {
 		btnUP.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(tUP != null)
+				if(tUP != null) {
 					updateTableWithEnnemi(tUP);
+					btnLEFT.setBackground(okButton.getBackground());
+					btnUP.setBackground(Color.RED);
+					btnDOWN.setBackground(okButton.getBackground());
+					btnRIGHT.setBackground(okButton.getBackground());
+				}
 			}
 		});
 		contentPanel.add(btnUP);
@@ -68,8 +82,13 @@ public class DialogATQ extends JDialog {
 		btnLEFT.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(tLEFT != null)
+				if(tLEFT != null) {
 					updateTableWithEnnemi(tLEFT);
+					btnLEFT.setBackground(Color.RED);
+					btnUP.setBackground(okButton.getBackground());
+					btnDOWN.setBackground(okButton.getBackground());
+					btnRIGHT.setBackground(okButton.getBackground());
+				}
 			}
 		});
 		contentPanel.add(btnLEFT);
@@ -79,8 +98,14 @@ public class DialogATQ extends JDialog {
 		btnRIGHT.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(tRIGHT != null)
+				if(tRIGHT != null) {
 					updateTableWithEnnemi(tRIGHT);
+					btnRIGHT.setBackground(Color.RED);
+					btnUP.setBackground(okButton.getBackground());
+					btnDOWN.setBackground(okButton.getBackground());
+					btnLEFT.setBackground(okButton.getBackground());
+				}
+				
 			}
 		});
 		contentPanel.add(btnRIGHT);
@@ -90,8 +115,13 @@ public class DialogATQ extends JDialog {
 		btnDOWN.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if(tDOWN != null)
+				if(tDOWN != null) {
 					updateTableWithEnnemi(tDOWN);
+					btnLEFT.setBackground(okButton.getBackground());
+					btnUP.setBackground(okButton.getBackground());
+					btnDOWN.setBackground(Color.RED);
+					btnRIGHT.setBackground(okButton.getBackground());
+				}
 			}
 		});
 		contentPanel.add(btnDOWN);
@@ -106,7 +136,7 @@ public class DialogATQ extends JDialog {
 		lblJoueur.setBounds(168, 5, 68, 24);
 		contentPanel.add(lblJoueur);
 		
-		JLabel lblEnnemi = new JLabel("Ennemi");
+		lblEnnemi = new JLabel("Ennemi");
 		lblEnnemi.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEnnemi.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 16));
 		lblEnnemi.setBounds(250, 5, 68, 24);
@@ -117,23 +147,23 @@ public class DialogATQ extends JDialog {
 		lblDommages.setBounds(89, 40, 89, 14);
 		contentPanel.add(lblDommages);
 		
-		JLabel label = new JLabel("-");
-		label.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 16));
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBounds(178, 40, 58, 14);
-		contentPanel.add(label);
+		lblDegatsAgent = new JLabel("-");
+		lblDegatsAgent.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 16));
+		lblDegatsAgent.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDegatsAgent.setBounds(178, 40, 58, 14);
+		contentPanel.add(lblDegatsAgent);
 		
-		JLabel label_1 = new JLabel("-");
-		label_1.setHorizontalAlignment(SwingConstants.CENTER);
-		label_1.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 16));
-		label_1.setBounds(260, 40, 58, 14);
-		contentPanel.add(label_1);
+		lblDegatsEnnemi = new JLabel("-");
+		lblDegatsEnnemi.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDegatsEnnemi.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 16));
+		lblDegatsEnnemi.setBounds(260, 40, 58, 14);
+		contentPanel.add(lblDegatsEnnemi);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						dispose();
@@ -193,6 +223,13 @@ public class DialogATQ extends JDialog {
 	}
 	
 	private void updateTableWithEnnemi(Terrain t) {
-		
+		if(t != null && t.getOccupant() != null) {
+			lblDegatsAgent.setText(Integer.toString(agent.calculDommages(t.getOccupant(), t)));
+			lblDegatsEnnemi.setText(Integer.toString(t.getOccupant() .calculDommages(agent, tCentral)));
+		}
+	}
+	
+	public JButton getOkButton() {
+		return okButton;
 	}
 }

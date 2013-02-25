@@ -330,31 +330,36 @@ public class GameEngine  {
 	 * @param eu l'évènement usine qui s'est produit
 	 */
 	public void resultatMenu(EventUsine eu) {
+		construireAgent(joueurCourant, usineCourante, eu);
+	}
+	
+	public void construireAgent(Player p, Factory u, EventUsine eu) {
 		Agent a;
 		switch(eu) {
 			case horse:
-				a = joueurCourant.creerAgent(usineCourante, new HorseAgent(0,0,joueurCourant),GameEngine.COUT_SUPER);
+				a = p.creerAgent(u, new HorseAgent(0,0,p),GameEngine.COUT_SUPER);
 				carte.ajouterAgent(a);
 				break;
 			case sword:
-				a = joueurCourant.creerAgent(usineCourante, new SwordAgent(0,0,joueurCourant),GameEngine.COUT_BASE);
+				a = p.creerAgent(u, new SwordAgent(0,0,p),GameEngine.COUT_BASE);
 				carte.ajouterAgent(a);
 				break;
 			case spear:
-				a = joueurCourant.creerAgent(usineCourante, new SpearAgent(0,0,joueurCourant),GameEngine.COUT_BASE);
+				a = p.creerAgent(u, new SpearAgent(0,0,p),GameEngine.COUT_BASE);
 				carte.ajouterAgent(a);
 				break;
 			case axe:
-				a = joueurCourant.creerAgent(usineCourante, new AxeAgent(0,0,joueurCourant),GameEngine.COUT_BASE);
+				a = p.creerAgent(u, new AxeAgent(0,0,p),GameEngine.COUT_BASE);
 				carte.ajouterAgent(a);
 				break;
 			case gold:
-				joueurCourant.augmenterRessources(usineCourante);
-				carte.repaintUsine(usineCourante);
+				p.augmenterRessources(u);
+				carte.repaintUsine(u);
 				break;
 			default:
 				break;
 		}
+		
 		/**
 		 * Déclanchement des différents repaint
 		 */

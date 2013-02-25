@@ -88,7 +88,7 @@ public class GUI extends JFrame {
 		
 	
 		
-		itemATQ = new JMenuItem("Attaquer à droite");
+		itemATQ = new JMenuItem("Attaquer");
 		itemATQ.addActionListener(new ListenerMenu(EventAgent.attaquer,gEngine));
 		jpmAgent.add(itemATQ);
 		

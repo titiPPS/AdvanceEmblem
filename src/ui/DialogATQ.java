@@ -33,27 +33,20 @@ public class DialogATQ extends JDialog {
 	private Agent agent;
 	private Terrain tCentral,tUP,tDOWN,tLEFT,tRIGHT;
 	private Terrain result;
-	private JLabel lblDegatsEnnemi;
-	private JLabel lblDegatsAgent;
 	private JLabel lblEnnemi;
 	private JButton okButton;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			DialogATQ dialog = new DialogATQ();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
+	private boolean exit = false;
+	private JLabel lblDegatsJoueur;
+	private JLabel lblDegatsEnnemi;
+	
 
 	/**
 	 * Create the dialog.
 	 */
 	public DialogATQ() {
+		setModal(true);
+		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		result = null;
 		setBounds(100, 100, 344, 160);
 		getContentPane().setLayout(new BorderLayout());
@@ -68,10 +61,8 @@ public class DialogATQ extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				if(tUP != null) {
 					updateTableWithEnnemi(tUP);
-					btnLEFT.setBackground(okButton.getBackground());
-					btnUP.setBackground(Color.RED);
-					btnDOWN.setBackground(okButton.getBackground());
-					btnRIGHT.setBackground(okButton.getBackground());
+					result = tUP;
+					okButton.setEnabled(true);
 				}
 			}
 		});
@@ -84,10 +75,8 @@ public class DialogATQ extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				if(tLEFT != null) {
 					updateTableWithEnnemi(tLEFT);
-					btnLEFT.setBackground(Color.RED);
-					btnUP.setBackground(okButton.getBackground());
-					btnDOWN.setBackground(okButton.getBackground());
-					btnRIGHT.setBackground(okButton.getBackground());
+					okButton.setEnabled(true);
+					result = tLEFT;
 				}
 			}
 		});
@@ -100,10 +89,8 @@ public class DialogATQ extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				if(tRIGHT != null) {
 					updateTableWithEnnemi(tRIGHT);
-					btnRIGHT.setBackground(Color.RED);
-					btnUP.setBackground(okButton.getBackground());
-					btnDOWN.setBackground(okButton.getBackground());
-					btnLEFT.setBackground(okButton.getBackground());
+					okButton.setEnabled(true);
+					result = tRIGHT;
 				}
 				
 			}
@@ -117,10 +104,8 @@ public class DialogATQ extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				if(tDOWN != null) {
 					updateTableWithEnnemi(tDOWN);
-					btnLEFT.setBackground(okButton.getBackground());
-					btnUP.setBackground(okButton.getBackground());
-					btnDOWN.setBackground(Color.RED);
-					btnRIGHT.setBackground(okButton.getBackground());
+					okButton.setEnabled(true);
+					result = tDOWN;
 				}
 			}
 		});
@@ -133,30 +118,30 @@ public class DialogATQ extends JDialog {
 		JLabel lblJoueur = new JLabel("Joueur");
 		lblJoueur.setHorizontalAlignment(SwingConstants.CENTER);
 		lblJoueur.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 16));
-		lblJoueur.setBounds(168, 5, 68, 24);
+		lblJoueur.setBounds(152, 5, 84, 24);
 		contentPanel.add(lblJoueur);
 		
-		lblEnnemi = new JLabel("Ennemi");
+		lblEnnemi = new JLabel("Commandant");
 		lblEnnemi.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEnnemi.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 16));
-		lblEnnemi.setBounds(250, 5, 68, 24);
+		lblEnnemi.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 15));
+		lblEnnemi.setBounds(234, 5, 94, 24);
 		contentPanel.add(lblEnnemi);
 		
-		JLabel lblDommages = new JLabel("Dommages");
-		lblDommages.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 16));
-		lblDommages.setBounds(89, 40, 89, 14);
-		contentPanel.add(lblDommages);
+		JLabel lblDegats = new JLabel("ATQ");
+		lblDegats.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 14));
+		lblDegats.setBounds(103, 40, 58, 14);
+		contentPanel.add(lblDegats);
 		
-		lblDegatsAgent = new JLabel("-");
-		lblDegatsAgent.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 16));
-		lblDegatsAgent.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDegatsAgent.setBounds(178, 40, 58, 14);
-		contentPanel.add(lblDegatsAgent);
+		lblDegatsJoueur = new JLabel("-");
+		lblDegatsJoueur.setHorizontalAlignment(SwingConstants.CENTER);
+		lblDegatsJoueur.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 16));
+		lblDegatsJoueur.setBounds(162, 40, 74, 14);
+		contentPanel.add(lblDegatsJoueur);
 		
 		lblDegatsEnnemi = new JLabel("-");
 		lblDegatsEnnemi.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDegatsEnnemi.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 16));
-		lblDegatsEnnemi.setBounds(260, 40, 58, 14);
+		lblDegatsEnnemi.setBounds(244, 40, 84, 14);
 		contentPanel.add(lblDegatsEnnemi);
 		{
 			JPanel buttonPane = new JPanel();
@@ -164,8 +149,10 @@ public class DialogATQ extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				okButton = new JButton("OK");
+				okButton.setEnabled(false);
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
+						exit = true;
 						dispose();
 					}
 				});
@@ -177,7 +164,8 @@ public class DialogATQ extends JDialog {
 				JButton cancelButton = new JButton("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						
+						result = null;
+						exit = true;
 						dispose();
 					}
 				});
@@ -224,12 +212,25 @@ public class DialogATQ extends JDialog {
 	
 	private void updateTableWithEnnemi(Terrain t) {
 		if(t != null && t.getOccupant() != null) {
-			lblDegatsAgent.setText(Integer.toString(agent.calculDommages(t.getOccupant(), t)));
-			lblDegatsEnnemi.setText(Integer.toString(t.getOccupant() .calculDommages(agent, tCentral)));
+			lblDegatsJoueur.setText(Integer.toString(agent.calculDegats(t.getOccupant(), t)));
+			lblDegatsEnnemi.setText(Integer.toString(t.getOccupant() .calculDegats(agent, tCentral)));
+			lblEnnemi.setText(t.getOccupant().getName());
 		}
 	}
 	
 	public JButton getOkButton() {
 		return okButton;
+	}
+
+	public void showDialog() {
+		this.setVisible(true);
+	}
+
+	public Terrain getResultat() {
+		return result;
+	}
+	
+	public boolean exit() {
+		return exit;
 	}
 }

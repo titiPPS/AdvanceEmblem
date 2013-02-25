@@ -42,8 +42,8 @@ public abstract class Agent{
 	
 	public abstract String getName();
 	
-	public int calculDommages(Agent a, Terrain t) {
-		int atq = a.getAtq();
+	public int calculDegats(Agent a, Terrain t) {
+		int atq = this._atq;
 		int def = a.getDef() + t.getDef();
 		if(estFortContre(a)) {
 			atq ++;

@@ -1,6 +1,5 @@
 package game;
 
-import javax.swing.SwingWorker;
 
 import ui.GUI;
 

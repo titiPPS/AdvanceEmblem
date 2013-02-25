@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
 
+import sun.management.resources.agent;
 import ui.DialogATQ;
 import ui.GUI;
 import ui.GUI.*;
@@ -265,20 +266,48 @@ public class GameEngine  {
 
 	public void resultatMenu(EventAgent ea) {
 		if(ea == EventAgent.attaquer) {
+			Terrain former = carte.getTerrain(agentCourant.getX(), agentCourant.getY());
+			deplacerAgent(former, carte.getTerrainCurseur(),false);
+			Terrain newPosition = carte.getTerrain(agentCourant.getX(), agentCourant.getY());
 			int x = agentCourant.getX();
 			int y = agentCourant.getY();
 			DialogATQ dialog = new DialogATQ(carte.getTerrain(x, y), carte.getTerrain(x, y - 1), carte.getTerrain(x, y + 1)
 					, carte.getTerrain(x - 1, y), carte.getTerrain(x + 1, y));
-			dialog.setVisible(true);
+			
+			dialog.showDialog();
+			if(dialog.getResultat() != null) {
+				attaquer(newPosition, dialog.getResultat());
+				if(!agentCourant.isDead()) {
+					agentCourant.setUsed(true);
+				}
+				for(Terrain temp : terrainsAccessibles) {
+					temp.setSelected(false);
+				}
+				carte.repaintLstTerrain(terrainsAccessibles);
+				
+				agentCourant = null;
+				eventEnCours = false;
+				_usrInterface.repaintMap(carte.getImage());
+				_usrInterface.repaintPaneauCtrl(newPosition);
+			}else {
+				if(former.getX() != agentCourant.getX() && former.getY() != agentCourant.getY()) {
+					agentCourant.setX(former.getX());
+					agentCourant.setY(former.getY());
+					former.setOccupant(agentCourant);
+					newPosition.setOccupant(null);
+					carte.repaintTerrain(former);
+					carte.repaintTerrain(newPosition);
+				}
+			}
 			
 		}else {
-			deplacerAgentCourant();
+			deplacerAgentCourant(carte.getTerrainCurseur());
 		}
+		
 		
 	}
 	
-	public void deplacerAgentCourant() {
-		Terrain dest = carte.getTerrainCurseur();
+	public void deplacerAgentCourant(Terrain dest) {
 		Terrain init = carte.getTerrain(agentCourant.getX(),agentCourant.getY());
 		carte.deplacerAgent(init,dest,_usrInterface);
 		agentCourant.setUsed(true);
@@ -368,12 +397,12 @@ public class GameEngine  {
 				Agent aATQ = tATQ.getOccupant();
 				Agent aDEF = tDEF.getOccupant();
 				
-				aDEF.setPV(aDEF.getPV() - aATQ.calculDommages(aDEF, tDEF));
+				aDEF.setPV(aDEF.getPV() - aATQ.calculDegats(aDEF, tDEF));
 				if(aDEF.isDead()) {
 					aDEF.getJoueur().removeUnite(aDEF);
 					tDEF.setOccupant(null);
 				}else {
-					aATQ.setPV(aATQ.getPV() - aDEF.calculDommages(aATQ, tATQ));
+					aATQ.setPV(aATQ.getPV() - aDEF.calculDegats(aATQ, tATQ));
 					if(aATQ.isDead()) {
 						aATQ.getJoueur().removeUnite(aATQ);
 						tATQ.setOccupant(null);
@@ -391,14 +420,17 @@ public class GameEngine  {
 	/**
 	 * Methode permettant de déplacer un agent du terrain
 	 * init vers le terrain dest.
+	 * Si le mouvement est permanent (cad ne sera pas annulé, alors
+	 * l'unité est considérée comme utilisée pour le tour en cours)
 	 * 
 	 * @param init
 	 * @param dest
+	 * @param mvtPermanent : vrai si le déplacement ne sera en aucun cas annulé
 	 */
-	public void deplacerAgent(Terrain init,Terrain dest) {
+	public void deplacerAgent(Terrain init,Terrain dest,boolean mvtPermanent) {
 		if(init != null && init.getOccupant() != null) {
 			carte.deplacerAgent(init,dest,_usrInterface);
-			dest.getOccupant().setUsed(true);
+			dest.getOccupant().setUsed(mvtPermanent);
 		}
 	}
 	

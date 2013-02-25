@@ -184,6 +184,14 @@ public class WorldMap {
 			g.drawImage(_curseur.getImage(false), _curseur.getX() * TAILLE_CASE, _curseur.getY() * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE, null);
 		}
 	}
+	
+	public void repaintTerrain(Terrain t) {
+		Graphics2D g = imageCarte.createGraphics();
+		g.drawImage(t.getImage(), t.getX() * TAILLE_CASE, t.getY() * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE, null);
+		if(_curseur.isVisible()) {
+			g.drawImage(_curseur.getImage(false), _curseur.getX() * TAILLE_CASE, _curseur.getY() * TAILLE_CASE, TAILLE_CASE, TAILLE_CASE, null);
+		}
+	}
 
 	public boolean isCurseurAdjToEnnemi(Player jCourant) {
 		boolean resultat = false;
@@ -325,6 +333,8 @@ public class WorldMap {
 		}
 		return resultat;
 	}
+
+	
 
 	
 	

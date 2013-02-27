@@ -194,8 +194,8 @@ public class Player {
 		
 	}
 	
-	public void setAlgorithme(AlgoHumain algoHumain) {
-		_algorithme = algoHumain;	
+	public void setAlgorithme(IAlgorithme algo) {
+		_algorithme = algo;	
 	}
 	
 	public static void initImage(String directory) {
@@ -218,6 +218,15 @@ public class Player {
 
 	public void removeUnite(Agent aDEF) {
 		lstUnite.remove(aDEF);		
+	}
+
+	public float calcPowMilitaire() {
+		float resultat = 0f;
+		for(Agent a : lstUnite) {
+			resultat += Agent.valueOf(a);
+		}
+		resultat += (commandant.getAtq() + commandant.getDef()) * commandant.getPV();
+		return resultat;
 	}
 
 

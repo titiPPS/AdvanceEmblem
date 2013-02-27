@@ -1,5 +1,7 @@
 package engine;
 
+import game.GameEngine;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -60,6 +62,11 @@ public class HorseAgent extends Agent {
 	@Override
 	public String getName() {
 		return "Cavalier";
+	}
+	
+	@Override
+	public int getPrix() {
+		return GameEngine.COUT_SUPER;
 	}
 	
 	public static void initImage(String directory) {

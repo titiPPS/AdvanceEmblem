@@ -1,6 +1,7 @@
 package game;
 
 import ia.AlgoHumain;
+import ia.AlgoIA;
 import ia.PathFinder;
 
 import java.awt.image.BufferedImage;
@@ -78,7 +79,7 @@ public class GameEngine  {
 		pRed.setCroissance(CROISSANCE_INIT);
 		joueurCourant = pRed;
 		pBlue = new Player(false);
-		pBlue.setAlgorithme( new AlgoHumain(pBlue));
+		pBlue.setAlgorithme( new AlgoIA(pBlue,pRed));
 		pBlue.setRessources(RESSOURCES_INIT);
 		pBlue.setCroissance(CROISSANCE_INIT);
 		
@@ -363,11 +364,13 @@ public class GameEngine  {
 		/**
 		 * Déclanchement des différents repaint
 		 */
-		_usrInterface.repaintMap(carte.getImage(), usineCourante.getX() * WorldMap.TAILLE_CASE,
-			usineCourante.getY() * WorldMap.TAILLE_CASE, WorldMap.TAILLE_CASE, WorldMap.TAILLE_CASE);
-		_usrInterface.updateInfo(joueurCourant);
-		carte.updateImageCtrl();
-		_usrInterface.repaintPaneauCtrl(carte.getTerrainCurseur());
+		_usrInterface.repaintMap(carte.getImage(), u.getX() * WorldMap.TAILLE_CASE,
+			u.getY() * WorldMap.TAILLE_CASE, WorldMap.TAILLE_CASE, WorldMap.TAILLE_CASE);
+		if(p.traiteEvent()) {
+			_usrInterface.updateInfo(p);
+			carte.updateImageCtrl();
+			_usrInterface.repaintPaneauCtrl(carte.getTerrainCurseur());
+		}
 	}
 
 	/**

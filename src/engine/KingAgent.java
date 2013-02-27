@@ -63,6 +63,7 @@ public class KingAgent extends Agent{
 		return "Commandant";
 	}
 	
+	
 	public static void initImage(String directory) {
 		try {
 			imageUsed = ImageIO.read(new File(directory + File.separator + FileImageUsed));

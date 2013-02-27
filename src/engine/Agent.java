@@ -1,5 +1,7 @@
 package engine;
 
+import game.GameEngine;
+
 import java.awt.image.BufferedImage;
 
 public abstract class Agent{
@@ -144,6 +146,9 @@ public abstract class Agent{
 		return false;
 	}
 
+	public int getPrix() {
+		return GameEngine.COUT_BASE;
+	}
 	public void setPV(int newPV) {
 		_pv = newPV;
 	}
@@ -154,5 +159,9 @@ public abstract class Agent{
 			return ID_Unite == a.ID_Unite;
 		}
 		return false;
+	}
+	
+	public static int valueOf(Agent a) {
+		return (a.getAtq() + a.getDef()) * a.getPV() / a.getPrix();
 	}
 }

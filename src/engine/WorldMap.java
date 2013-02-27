@@ -253,7 +253,7 @@ public class WorldMap {
 	}
 
 	public Terrain getTerrain(int x, int y) {
-		if (x > 0 && x < _width && y > 0 && y < _height) {
+		if (x >= 0 && x < _width && y >= 0 && y < _height) {
 			return mapMonde[x][y];
 		}else {
 			return null;

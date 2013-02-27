@@ -30,6 +30,7 @@ import engine.Player;
 import engine.SpearAgent;
 import engine.SwordAgent;
 import engine.Terrain;
+import engine.Water;
 import engine.WorldMap;
 
 public class GameEngine  {
@@ -167,7 +168,7 @@ public class GameEngine  {
 		Grass.initImage(dir);
 		Mountain.initImage(dir);
 		Forest.initImage(dir);
-		
+		Water.initImage(dir);
 		Factory.initImage(dir);
 		
 		/*Agents*/
@@ -355,22 +356,19 @@ public class GameEngine  {
 				break;
 			case gold:
 				p.augmenterRessources(u);
-				carte.repaintUsine(u);
 				break;
 			default:
 				break;
 		}
-		
+		carte.repaintUsine(u);
 		/**
 		 * Déclanchement des différents repaint
 		 */
 		_usrInterface.repaintMap(carte.getImage(), u.getX() * WorldMap.TAILLE_CASE,
 			u.getY() * WorldMap.TAILLE_CASE, WorldMap.TAILLE_CASE, WorldMap.TAILLE_CASE);
-		if(p.traiteEvent()) {
 			_usrInterface.updateInfo(p);
 			carte.updateImageCtrl();
 			_usrInterface.repaintPaneauCtrl(carte.getTerrainCurseur());
-		}
 	}
 
 	/**

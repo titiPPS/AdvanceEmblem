@@ -82,6 +82,7 @@ public class AlgoIA implements IAlgorithme{
 	}
 	
 	public EventUsine determinerAction(ArrayList<Terrain> positionsMenaces) {
+		float pNothing = probaNothing, pRsrc = probaRsrc, pBase = probaBase, pSuper = probaSuper;
 		float currentPowJoueur = _joueur.calcPowMilitaire(), currentPowEnnemi = _ennemi.calcPowMilitaire();
 		int currentCroissance = _joueur.getCroissance(), currentRsrc = _joueur.getRessources() ;
 		float currentValue = valueOfState(currentPowJoueur, currentPowEnnemi, currentCroissance, 
@@ -89,39 +90,44 @@ public class AlgoIA implements IAlgorithme{
 		float delta = 0.0f;
 		EventUsine resultat = EventUsine.nothing;
 		double rdm = Math.random();
+		if(currentPowJoueur - currentPowEnnemi <= 0) {
+			pNothing *= 0.5f;
+			pBase *= 0.5f;
+			pBase += pNothing + pBase;
+		}
 		/*On met à jour la variable de décision aléatoire en fonction des ressources du joueur*/
 		if(_joueur.getRessources() < GameEngine.COUT_SUPER) {
 			if(_joueur.getRessources() < GameEngine.COUT_BASE) {
 				if(_joueur.getRessources() < GameEngine.COUT_AUGMENTATION_RESSOURCES) {
 					rdm = 0;
 				}else {
-					rdm *= (probaNothing + probaRsrc);
+					rdm *= (pNothing + pRsrc);
 				}
 			}else {
-				rdm *= (probaNothing + probaRsrc + probaBase);
+				rdm *= (pNothing + pRsrc + pBase);
 			}
 		}else if(positionsMenaces.size() > 0){
 			double random = Math.random();
 			if(random > Math.pow(2, -positionsMenaces.size())) {
-				rdm += probaNothing + probaRsrc;
+				rdm += pNothing + pRsrc;
 				rdm = Math.min(1.0, rdm);
 			}
 		}
 		
-		if(rdm < (probaNothing + probaRsrc)) {
+		if(rdm < (pNothing + pRsrc)) {
 			//On privilégie les ressources
-			if(rdm > probaNothing) {
+			if(rdm > pNothing) {
 				//On augmente la croissance
 				resultat = EventUsine.gold;
 				currentRsrc -= GameEngine.COUT_AUGMENTATION_RESSOURCES;
 				currentCroissance += GameEngine.AUGMENTATION_CROISSANCE;
 				delta = (valueOfState(currentPowJoueur, currentPowEnnemi, currentCroissance,
 						currentRsrc , _joueur.getListOfFactory().size()) - currentValue) / currentValue;
-				probaRsrc += delta / PEREQ_DELTA;
+				pRsrc += delta / PEREQ_DELTA;
 			}
 		}else {
 			//Construction d'unites militaires
-			if(rdm < probaNothing + probaRsrc + probaBase) {
+			if(rdm < pNothing + pRsrc + pBase) {
 				//Base Agent
 				Agent a;
 				resultat = determinerBaseAgent();
@@ -130,16 +136,16 @@ public class AlgoIA implements IAlgorithme{
 				currentPowJoueur += Agent.valueOf(a);
 				delta = (valueOfState(currentPowJoueur, currentPowEnnemi, currentCroissance,
 						currentRsrc , _joueur.getListOfFactory().size()) - currentValue) / currentValue;
-				probaBase += delta / PEREQ_DELTA;
+				pBase += delta / PEREQ_DELTA;
 				
-			}else if(rdm >= probaNothing + probaRsrc + probaBase) {
+			}else if(rdm >= pNothing + pRsrc + pBase) {
 				//superAgent
 				resultat = EventUsine.horse;
 				currentRsrc -= GameEngine.COUT_AUGMENTATION_RESSOURCES;
 				currentPowJoueur += Agent.valueOf(HorseAgent.getInstance());
 				delta = (valueOfState(currentPowJoueur, currentPowEnnemi, currentCroissance,
 						currentRsrc , _joueur.getListOfFactory().size()) - currentValue) / currentValue;
-				probaSuper += delta / PEREQ_DELTA;
+				pSuper += delta / PEREQ_DELTA;
 			}
 		}
 		equilibrerProba();

@@ -159,6 +159,8 @@ public abstract class Terrain {
 			return new Forest(x,y);
 		case Mountain.ID_TERRAIN :
 			return new Mountain(x,y);
+		case Water.ID_TERRAIN :
+			return new Water(x,y);
 		default :
 			return new Grass(x,y);
 		}

@@ -232,7 +232,7 @@ public class GUI extends JFrame {
 		panDetail.setLayout(null);
 		
 		JLabel labelTypeInfo = new JLabel("");
-		labelTypeInfo.setFont(new Font("Matura MT Script Capitals", Font.BOLD, 14));
+		labelTypeInfo.setFont(new Font("Matura MT Script Capitals", Font.BOLD, 13));
 		lblTypeInfo = labelTypeInfo;
 		labelTypeInfo.setHorizontalAlignment(SwingConstants.CENTER);
 		labelTypeInfo.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -246,14 +246,14 @@ public class GUI extends JFrame {
 		panDetail.add(progressBar);
 		
 		JLabel labelInfo1 = new JLabel("");
-		labelInfo1.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 14));
+		labelInfo1.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 13));
 		labelInfo1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblInfo1 = labelInfo1;
 		labelInfo1.setBounds(6, 30, 88, 15);
 		panDetail.add(labelInfo1);
 		
 		JLabel labelInfo2 = new JLabel("");
-		labelInfo2.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 13));
+		labelInfo2.setFont(new Font("Matura MT Script Capitals", Font.PLAIN, 12));
 		labelInfo2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblInfo2 = labelInfo2;
 		labelInfo2.setBounds(6, 55, 88, 15);
@@ -263,7 +263,7 @@ public class GUI extends JFrame {
 		JLabel labelRessource = new JLabel("500");
 		lblRessources = labelRessource;
 		labelRessource.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelRessource.setFont(new Font("Matura MT Script Capitals", Font.BOLD, 18));
+		labelRessource.setFont(new Font("Matura MT Script Capitals", Font.BOLD, 16));
 		labelRessource.setBounds(211, 80, 105, 22);
 		panCommande.add(labelRessource);
 		
@@ -276,20 +276,20 @@ public class GUI extends JFrame {
 		JLabel labelCroissance = new JLabel("0");
 		lblCroissance = labelCroissance;
 		labelCroissance.setHorizontalAlignment(SwingConstants.RIGHT);
-		labelCroissance.setFont(new Font("Matura MT Script Capitals", Font.BOLD, 18));
+		labelCroissance.setFont(new Font("Matura MT Script Capitals", Font.BOLD, 16));
 		labelCroissance.setBounds(211, 54, 55, 22);
 		panCommande.add(labelCroissance);
 		
 		JLabel labelTxtCrois = new JLabel("$ / Tour");
 		labelTxtCrois.setHorizontalAlignment(SwingConstants.LEFT);
-		labelTxtCrois.setFont(new Font("Matura MT Script Capitals", Font.BOLD, 18));
+		labelTxtCrois.setFont(new Font("Matura MT Script Capitals", Font.BOLD, 16));
 		labelTxtCrois.setBounds(278, 54, 76, 22);
 		panCommande.add(labelTxtCrois);
 		
 		JLabel labelJoueur = new JLabel("");
 		labelJoueur.setForeground(new Color(128, 0, 0));
 		lblJoueur = labelJoueur;
-		labelJoueur.setFont(new Font("Matura MT Script Capitals", Font.BOLD, 20));
+		labelJoueur.setFont(new Font("Matura MT Script Capitals", Font.BOLD, 18));
 		labelJoueur.setBounds(223, 10, 135, 40);
 		panCommande.add(labelJoueur);
 		
@@ -300,7 +300,7 @@ public class GUI extends JFrame {
 		
 		JLabel label = new JLabel("$");
 		label.setHorizontalAlignment(SwingConstants.RIGHT);
-		label.setFont(new Font("Matura MT Script Capitals", Font.BOLD, 18));
+		label.setFont(new Font("Matura MT Script Capitals", Font.BOLD, 16));
 		label.setBounds(328, 80, 18, 22);
 		panCommande.add(label);
 		

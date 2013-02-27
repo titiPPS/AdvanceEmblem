@@ -63,6 +63,10 @@ public class KingAgent extends Agent{
 		return "Commandant";
 	}
 	
+	@Override
+	public int getPrix() {
+		return 1;
+	}
 	
 	public static void initImage(String directory) {
 		try {

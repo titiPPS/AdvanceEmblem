@@ -1,6 +1,8 @@
 package ia;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Random;
 
 import ui.GUI.EventUsine;
 
@@ -24,8 +26,10 @@ public class AlgoIA implements IAlgorithme{
 	
 	private float coeffRsrc, coeffMilitary,coeffCroissance;
 	private float probaSuper = 0.3f, probaBase = 0.35f,probaRsrc = 0.3f,probaNothing = 0.005f;
+	private Random randGenerator;
 	
 	public AlgoIA(Player joueur,Player ennemi) {
+		randGenerator = new Random();
 		this._joueur = joueur;
 		this._ennemi = ennemi;
 		coeffRsrc = COEFF_RSRC;
@@ -35,6 +39,15 @@ public class AlgoIA implements IAlgorithme{
 
 	@Override
 	public void jouer(GameEngine gEngine) {
+		//TODO Gestion des unites
+		for(Agent a : _joueur.getListOfUnite()) {
+			HashSet<Terrain> lstDest = PathFinder.listeDestination(gEngine.getTerrain(a.getX(), a.getY()), a.getMouvement());
+			Terrain[] tab = new Terrain[lstDest.size()];
+			tab = lstDest.toArray(tab);
+			int destination = randGenerator.nextInt(lstDest.size());
+			gEngine.deplacerAgent(gEngine.getTerrain(a.getX(), a.getY()), tab[destination], true);
+		}
+		
 		//TODO Gestion du commandant
 		Agent king = _joueur.getCommandant();
 		//On établit la liste des menaces pesant sur le commandant
@@ -47,7 +60,7 @@ public class AlgoIA implements IAlgorithme{
 			}
 		}
 		
-		//TODO Gestion des unites
+		
 		
 		//TODO Gestion de la production
 		//Nouvelle estimation des menaces pesant sur le commandant
@@ -182,7 +195,7 @@ public class AlgoIA implements IAlgorithme{
 		double rand = Math.random();
 		if(rand < scoreAxe) {
 			return EventUsine.axe;
-		}else if(rand < scoreSword) {
+		}else if(rand < scoreAxe + scoreSword) {
 			return EventUsine.sword;
 		}else {
 			return EventUsine.spear;

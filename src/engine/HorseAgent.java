@@ -9,7 +9,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class HorseAgent extends Agent {
-	private final static int SPEEDHORSE = 40;
+	private final static int SPEEDHORSE = 7;
 	private final static int POINTSDEVIE = 40;
 	private final static int ATQ = 9;
 	private final static int DEF = 3;

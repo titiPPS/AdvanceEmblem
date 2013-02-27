@@ -439,6 +439,8 @@ public class GameEngine  {
 		if(init != null && init.getOccupant() != null) {
 			carte.deplacerAgent(init,dest,_usrInterface);
 			dest.getOccupant().setUsed(mvtPermanent);
+			carte.repaintTerrain(dest);
+			_usrInterface.repaintMap(carte.getImage(),dest.getX(),dest.getY(),WorldMap.TAILLE_CASE, WorldMap.TAILLE_CASE);
 		}
 	}
 	

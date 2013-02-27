@@ -25,6 +25,8 @@ public class SpearAgent extends Agent {
 	private static BufferedImage imageCtrlRed;
 	private static BufferedImage imageCtrlBlue;
 	
+	private static SpearAgent instanceTest = new SpearAgent(-1, -1, null);
+	
 	public SpearAgent(int x, int y,Player p) {
 		super(x, y,SPEEDSPEAR,p,POINTSDEVIE,ATQ,DEF);
 		// TODO Auto-generated constructor stub
@@ -86,5 +88,9 @@ public class SpearAgent extends Agent {
 	@Override
 	public boolean estFaibleContre(AxeAgent a) {
 		return true;
+	}
+	
+	public static SpearAgent getInstance() {
+		return instanceTest;
 	}
 }

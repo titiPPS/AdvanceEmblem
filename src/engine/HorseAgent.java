@@ -24,6 +24,8 @@ public class HorseAgent extends Agent {
 	private static BufferedImage imageCtrlRed;
 	private static BufferedImage imageCtrlBlue;
 	
+	private static HorseAgent instanceTest = new HorseAgent(-1, -1, null);
+	
 	public HorseAgent(int x, int y, Player joueur) {
 		super(x, y, SPEEDHORSE, joueur,POINTSDEVIE,ATQ,DEF);
 		// TODO Auto-generated constructor stub
@@ -74,6 +76,8 @@ public class HorseAgent extends Agent {
 		}
 	}
 
-	
+	public static HorseAgent getInstance() {
+		return instanceTest;
+	}
 
 }

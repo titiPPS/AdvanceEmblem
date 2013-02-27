@@ -24,6 +24,7 @@ public class AxeAgent extends Agent {
 	private static BufferedImage imageCtrlRed;
 	private static BufferedImage imageCtrlBlue;
 	
+	private static AxeAgent instanceTest = new AxeAgent(-1, -1, null);
 	
 	public AxeAgent(int x, int y,Player p) {
 		super(x, y,SPEEDAXE,p,POINTSDEVIE,ATQ,DEF);
@@ -85,6 +86,9 @@ public class AxeAgent extends Agent {
 	public boolean estFaibleContre(SwordAgent a) {
 		return true;
 	}
-
+	
+	public static AxeAgent getInstance() {
+		return instanceTest;
+	}
 
 }

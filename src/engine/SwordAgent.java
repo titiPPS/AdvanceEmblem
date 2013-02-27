@@ -26,6 +26,7 @@ public class SwordAgent extends Agent{
 	private static BufferedImage imageCtrlRed;
 	private static BufferedImage imageCtrlBlue;
 	
+	private static SwordAgent instanceTest = new SwordAgent(-1, -1, null);
 	
 	public SwordAgent(int x, int y,Player p) {
 		super(x, y,SPEEDSWORD,p,POINTSDEVIE,ATQ,DEF);
@@ -85,6 +86,10 @@ public class SwordAgent extends Agent{
 	@Override
 	public boolean estFaibleContre(SpearAgent a) {
 		return true;
+	}
+	
+	public static SwordAgent getInstance() {
+		return instanceTest;
 	}
 	
 }

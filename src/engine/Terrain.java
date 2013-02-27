@@ -113,6 +113,10 @@ public abstract class Terrain {
 		return _bIsAccessible && _occupant == null;
 	}
 	
+	public boolean isAccessible(Player p) {
+		return _bIsAccessible && (_occupant == null || !_occupant.appartientA(p));
+	}
+	
 	public int getCout() {
 		return _coutMvt;
 	}

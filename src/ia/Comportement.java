@@ -1,26 +1,43 @@
 package ia;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 
 import engine.Agent;
 import engine.KingAgent;
 import engine.Player;
 import engine.Terrain;
+import game.GameEngine;
 
 public class Comportement {
 	
 	private Player _joueur;
+	private GameEngine gEngine;
 	private float score;
-	private float pLongTerme,penaliteMort,recompenseCmdt;
+	private float penaliteMort,recompenseCmdt;
+	
+	/*Long terme*/
+	private float pLongTerme,probaCmdt;
 	
 	/*ATQ*/
 	private float coeffTuer,coeffDmgInfl,coeffDmgRec,coeffCibleCommune;
 	
-	public Comportement(Player joueur,float pLongTerme,float penaliteMort,float recompenseCmdt) {
+	/*Type de comportement*/
+	private float objDEF,objATQ;
+	
+	public Comportement(GameEngine ge,Player joueur,float penaliteMort,float recompenseCmdt) {
 		this._joueur = joueur;
-		this.pLongTerme = pLongTerme;
+		this.gEngine = ge;
 		this.penaliteMort = penaliteMort;
 		this.recompenseCmdt = recompenseCmdt;
+	}
+	
+	
+	public void setDistribution(float ATQ, float DEF) {
+		objDEF = DEF;
+		objATQ = ATQ;
 	}
 	
 	public void setCoeffATQ(float coeffTUER, float coeffDmgInfl, float coeffDmgRec,float coeffCibleCommune) {
@@ -30,11 +47,16 @@ public class Comportement {
 		this.coeffCibleCommune = coeffCibleCommune;
 	}
 	
-	public Terrain choisirDestination(ArrayList<Terrain> lstTerrain, Player ennemi) {
+	public void setCoeffLongTerme(float pLongTerme,float probaCmdt) {
+		this.pLongTerme = pLongTerme;
+		this.probaCmdt = probaCmdt;
+	}
+	
+	public Terrain choisirDestination(Agent agent, ArrayList<Terrain> lstTerrain, Player ennemi) {
 		if(Math.random() < pLongTerme) {
 			return evaluerDestination(lstTerrain);
 		}else {
-			return destinationObjectif(ennemi);
+			return destinationObjectif(agent,ennemi);
 		}
 	}
 	
@@ -103,11 +125,76 @@ public class Comportement {
 	}
 	
 	public Terrain evaluerDestination(ArrayList<Terrain> lstTerrain) {
-		return null;
+		Terrain res = null;
+		float[] scores = new float[lstTerrain.size()];
+		for(int i = 0 ; i < lstTerrain.size(); i ++) {
+			scores[i] = evaluerTerrain(lstTerrain.get(i));
+		}
+		return res;
 	}
 	
-	public Terrain destinationObjectif(Player ennemi) {
-		return null;
+	private float evaluerTerrain(Terrain terrain) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public Terrain destinationObjectif(Agent a,Player ennemi) {
+		if(objATQ > objDEF) {
+			
+		}else {
+			boolean xCondition = (a.getX() + a.getMouvement() >= _joueur.getCommandant().getX() && a.getX() - a.getMouvement() <= _joueur.getCommandant().getX());
+			boolean yCondition = (a.getY() + a.getMouvement() >= _joueur.getCommandant().getY() && a.getY() - a.getMouvement() <= _joueur.getCommandant().getY());
+			if (xCondition && yCondition){
+				//Perimetre de protection
+				ArrayList<Agent> lstMenaces = calculerMenaces(_joueur.getCommandant(), ennemi);
+				Collections.sort(lstMenaces, new Comparator<Agent>() {
+					@Override
+					public int compare(Agent o1, Agent o2) {
+					return Agent.valueOf(o2) - Agent.valueOf(o1);
+					}
+				});
+				Terrain[] tab = new Terrain[a.getMouvement()];
+				Terrain init = gEngine.getTerrain(a.getX(), a.getY());
+				ArrayList<Terrain> chemin;
+				
+				/*On évalue la menace la plus pertinente (il vaut mieux tuer qqn
+				 * plutôt que de se diriger vers qqn d'autre et ne rien faire)
+				 * 
+				 */
+				for(int i = 0; i < lstMenaces.size() ; i++) {
+					chemin = PathFinder.aStarForATQ(init, gEngine.getTerrain(a.getX(), a.getY()), a.getMouvement(), _joueur);
+					if(chemin != null) {
+						for(int j = 1; j < chemin.size(); j++) {
+							if(chemin.get(j).getOccupant() != null) {
+								return chemin.get(j);
+							}
+						}
+					}
+				}
+				
+			}else {
+				//on essaye de rejoindre le commandant et on dézingue ce qu'il y a sur le chemin
+				boolean destinationFound = false;
+				int cpt = 0;
+				Terrain init = gEngine.getTerrain(_joueur.getCommandant().getX(), _joueur.getCommandant().getY());
+				ArrayList<Terrain> al;
+				HashSet<Terrain> lstDestCmdt = PathFinder.listeDestination(init, _joueur.getCommandant().getMouvement());
+				Terrain[] tab = new Terrain[lstDestCmdt.size()];
+				tab = lstDestCmdt.toArray(tab);
+				while(!destinationFound && cpt < tab.length) {
+					al = PathFinder.aStar(init, tab[cpt], a.getMouvement());
+					if(al != null) {
+						return tab[cpt];
+					}
+					cpt ++;
+				}
+				
+			}
+		}
+		HashSet<Terrain> set = PathFinder.listeDestination( gEngine.getTerrain( a.getX(), a.getY()), a.getMouvement());
+		ArrayList<Terrain> al = new ArrayList<Terrain>();
+		al.addAll(set);
+		return evaluerDestination(al);
 	}
 
 }

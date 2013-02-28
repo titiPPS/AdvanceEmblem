@@ -134,7 +134,7 @@ public class Comportement {
 	}
 	
 	private float evaluerTerrain(Terrain terrain) {
-		// TODO Auto-generated method stub
+		float score = 0f;
 		return 0;
 	}
 
@@ -144,6 +144,11 @@ public class Comportement {
 			Agent comdt = ennemi.getCommandant();
 			Terrain dest = gEngine.getTerrain(comdt.getX(), comdt.getY());
 			ArrayList<Terrain> cheminToCmdt = PathFinder.aStarForATQ(init, dest, a.getMouvement(), _joueur);
+			for(int j = 1; j < cheminToCmdt.size(); j++) {
+				if(cheminToCmdt.get(j).getOccupant() != null) {
+					return cheminToCmdt.get(j - 1);
+				}
+			}
 			
 		}else {
 			boolean xCondition = (a.getX() + a.getMouvement() >= _joueur.getCommandant().getX() && a.getX() - a.getMouvement() <= _joueur.getCommandant().getX());

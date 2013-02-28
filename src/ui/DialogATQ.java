@@ -184,25 +184,25 @@ public class DialogATQ extends JDialog {
 		this.tCentral = central;
 		this.agent = central.getOccupant();
 		lblAgent.setIcon(new ImageIcon(central.getImage()));
-		if(tUP != null && tUP.getOccupant() != null) {
+		if(tUP != null && tUP.getOccupant() != null && !tUP.getOccupant().appartientA(agent.getJoueur())) {
 			btnUP.setIcon(new ImageIcon(tUP.getImage()));
 			btnUP.setVisible(true);
 		}else {
 			btnUP.setVisible(false);
 		}
-		if(tDOWN != null && tDOWN.getOccupant() != null) {
+		if(tDOWN != null && tDOWN.getOccupant() != null && !tDOWN.getOccupant().appartientA(agent.getJoueur())) {
 			btnDOWN.setIcon(new ImageIcon(tDOWN.getImage()));
 			btnDOWN.setVisible(true);
 		}else {
 			btnDOWN.setVisible(false);
 		}
-		if(tLEFT != null && tLEFT.getOccupant() != null) {
+		if(tLEFT != null && tLEFT.getOccupant() != null && !tLEFT.getOccupant().appartientA(agent.getJoueur())) {
 			btnLEFT.setIcon(new ImageIcon(tLEFT.getImage()));
 			btnLEFT.setVisible(true);
 		}else {
 			btnLEFT.setVisible(false);
 		}
-		if(tRIGHT != null && tRIGHT.getOccupant() != null) {
+		if(tRIGHT != null && tRIGHT.getOccupant() != null && !tRIGHT.getOccupant().appartientA(agent.getJoueur())) {
 			btnRIGHT.setIcon(new ImageIcon(tRIGHT.getImage()));
 			btnRIGHT.setVisible(true);
 		}else {

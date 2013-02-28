@@ -7,8 +7,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class SwordAgent extends Agent{
+	public  final static int ID = 4;
 	private final static int SPEEDSWORD = 6;
-	private final static int POINTSDEVIE = 10;
+	private final static int POINTSDEVIE = 12;
 	private final static int ATQ = 7;
 	private final static int DEF = 1;
 	
@@ -27,6 +28,7 @@ public class SwordAgent extends Agent{
 	private static BufferedImage imageCtrlBlue;
 	
 	private static SwordAgent instanceTest = new SwordAgent(-1, -1, null);
+	private static int[] faiblesses = {3}, forces = {2};
 	
 	public SwordAgent(int x, int y,Player p) {
 		super(x, y,SPEEDSWORD,p,POINTSDEVIE,ATQ,DEF);
@@ -78,18 +80,26 @@ public class SwordAgent extends Agent{
 		}
 	}
 	
-	@Override
-	public boolean estFortContre(AxeAgent a) {
-		return true;
-	}
-
-	@Override
-	public boolean estFaibleContre(SpearAgent a) {
-		return true;
-	}
-	
 	public static SwordAgent getInstance() {
 		return instanceTest;
+	}
+
+
+	@Override
+	public int getIDClass() {
+		return ID;
+	}
+
+
+	@Override
+	public int[] getFaiblesses() {
+		return faiblesses.clone();
+	}
+
+
+	@Override
+	public int[] getForces() {
+		return forces.clone();
 	}
 	
 }

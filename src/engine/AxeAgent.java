@@ -7,8 +7,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class AxeAgent extends Agent {
+	public  final static int ID = 2;
 	private final static int SPEEDAXE = 6;
-	private final static int POINTSDEVIE = 10;
+	private final static int POINTSDEVIE = 12;
 	private final static int ATQ = 7;
 	private final static int DEF = 1;
 	private static final String FileImageUsed = "GreyAxeAgent.png";
@@ -25,6 +26,7 @@ public class AxeAgent extends Agent {
 	private static BufferedImage imageCtrlBlue;
 	
 	private static AxeAgent instanceTest = new AxeAgent(-1, -1, null);
+	private static int[] faiblesses = {4}, forces = {3};
 	
 	public AxeAgent(int x, int y,Player p) {
 		super(x, y,SPEEDAXE,p,POINTSDEVIE,ATQ,DEF);
@@ -72,23 +74,31 @@ public class AxeAgent extends Agent {
 			imageCtrlRed = ImageIO.read(new File(directory + File.separator + FileImageCtrlRed));
 			imageCtrlBlue = ImageIO.read(new File(directory + File.separator + FileImageCtrlBlue));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	@Override
-	public boolean estFortContre(SpearAgent a) {
-		return true;
-	}
-
-	@Override
-	public boolean estFaibleContre(SwordAgent a) {
-		return true;
-	}
 	
 	public static AxeAgent getInstance() {
 		return instanceTest;
+	}
+
+
+	@Override
+	public int getIDClass() {
+		return ID;
+	}
+
+
+	@Override
+	public int[] getFaiblesses() {
+		return faiblesses.clone();
+	}
+
+
+	@Override
+	public int[] getForces() {
+	return forces.clone();
 	}
 
 }

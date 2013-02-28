@@ -7,8 +7,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class SpearAgent extends Agent {
+	public  final static int ID = 3;
 	private final static int SPEEDSPEAR = 6;
-	private final static int POINTSDEVIE = 10;
+	private final static int POINTSDEVIE = 12;
 	private final static int ATQ = 7;
 	private final static int DEF = 1;
 	private static final String FileImageUsed = "GreySpearAgent.png";
@@ -26,6 +27,7 @@ public class SpearAgent extends Agent {
 	private static BufferedImage imageCtrlBlue;
 	
 	private static SpearAgent instanceTest = new SpearAgent(-1, -1, null);
+	private static int[] faiblesses = {2}, forces = {4};
 	
 	public SpearAgent(int x, int y,Player p) {
 		super(x, y,SPEEDSPEAR,p,POINTSDEVIE,ATQ,DEF);
@@ -79,18 +81,26 @@ public class SpearAgent extends Agent {
 		}
 	}
 	
-
-	@Override
-	public boolean estFortContre(SwordAgent a) {
-		return true;
-	}
-
-	@Override
-	public boolean estFaibleContre(AxeAgent a) {
-		return true;
-	}
 	
 	public static SpearAgent getInstance() {
 		return instanceTest;
+	}
+
+
+	@Override
+	public int getIDClass() {
+		return ID;
+	}
+
+
+	@Override
+	public int[] getFaiblesses() {
+		return faiblesses.clone();
+	}
+
+
+	@Override
+	public int[] getForces() {
+		return forces.clone();
 	}
 }

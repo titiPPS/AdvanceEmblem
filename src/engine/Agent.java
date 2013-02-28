@@ -114,35 +114,27 @@ public abstract class Agent{
 		return _joueur.equals(joueurCourant);
 	}
 	
-	public boolean estFaibleContre(AxeAgent a) {
-		return false;
-	}
-	public boolean estFaibleContre(SwordAgent a) {
-		return false;
-	}
-	public boolean estFaibleContre(SpearAgent a) {
-		return false;
-	}
-	public boolean estFaibleContre(HorseAgent a) {
-		return false;
-	}
 	public boolean estFaibleContre(Agent a) {
+		int[] faiblesses = getFaiblesses();
+		if (faiblesses != null) {
+			for(int i : faiblesses) {
+				if(i == a.getIDClass()) {
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 	
-	public boolean estFortContre(AxeAgent a) {
-		return false;
-	}
-	public boolean estFortContre(SwordAgent a) {
-		return false;
-	}
-	public boolean estFortContre(SpearAgent a) {
-		return false;
-	}
-	public boolean estFortContre(HorseAgent a) {
-		return false;
-	}
 	public boolean estFortContre(Agent a) {
+		int[] forces = getForces();
+		if (forces != null) {
+			for(int i : forces) {
+				if(i == a.getIDClass()) {
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 
@@ -164,4 +156,8 @@ public abstract class Agent{
 	public static int valueOf(Agent a) {
 		return (a.getAtq() + a.getDef()) * a.getPV() / a.getPrix();
 	}
+	
+	public abstract int getIDClass();
+	public abstract int[] getFaiblesses();
+	public abstract int[] getForces();
 }

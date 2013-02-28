@@ -9,10 +9,12 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class HorseAgent extends Agent {
+	public  final static int ID = 5;
 	private final static int SPEEDHORSE = 9;
 	private final static int POINTSDEVIE = 30;
 	private final static int ATQ = 8;
-	private final static int DEF = 2;
+	private final static int DEF = 3;
+	
 	private static final String FileImageUsed = "GreyHorseAgent.png";
 	private static final String FileImageRed = "RedHorseAgent.png";
 	private static final String FileImageBlue = "BlueHorseAgent.png";
@@ -30,7 +32,6 @@ public class HorseAgent extends Agent {
 	
 	public HorseAgent(int x, int y, Player joueur) {
 		super(x, y, SPEEDHORSE, joueur,POINTSDEVIE,ATQ,DEF);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -78,13 +79,27 @@ public class HorseAgent extends Agent {
 			imageCtrlRed = ImageIO.read(new File(directory + File.separator + FileImageCtrlRed));
 			imageCtrlBlue = ImageIO.read(new File(directory + File.separator + FileImageCtrlBlue));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public static HorseAgent getInstance() {
 		return instanceTest;
+	}
+
+	@Override
+	public int getIDClass() {
+		return ID;
+	}
+
+	@Override
+	public int[] getFaiblesses() {
+		return null;
+	}
+
+	@Override
+	public int[] getForces() {
+		return null;
 	}
 
 }

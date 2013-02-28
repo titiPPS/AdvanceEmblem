@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class KingAgent extends Agent{
+	public  final static int ID = 1;
 	private final static int SPEEDKING = 4;
 	private final static int POINTSDEVIE = 20;
 	private final static int ATQ = 7;
@@ -29,7 +30,6 @@ public class KingAgent extends Agent{
 	
 	public KingAgent(int x, int y,Player p) {
 		super(x, y, SPEEDKING,p,POINTSDEVIE,ATQ,DEF);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
@@ -77,8 +77,22 @@ public class KingAgent extends Agent{
 			imageCtrlRed = ImageIO.read(new File(directory + File.separator + FileImageCtrlRed));
 			imageCtrlBlue = ImageIO.read(new File(directory + File.separator + FileImageCtrlBlue));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public int getIDClass() {
+		return ID;
+	}
+
+	@Override
+	public int[] getFaiblesses() {
+		return null;
+	}
+
+	@Override
+	public int[] getForces() {
+		return null;
 	}
 }

@@ -16,9 +16,13 @@ import javax.imageio.ImageIO;
 public class Player {
 	public static final String fileBaniereRouge = "BaniereRouge.png";
 	public static final String fileBaniereBleue = "BaniereBleu.png";
+	public static final String fileVictoireRouge = "VictoryRed.png";
+	public static final String fileVictoireBleue = "VictoryBlue.png";
 	
 	private static BufferedImage baniereBleue;
 	private static BufferedImage baniereRouge;
+	private static BufferedImage vicBleue;
+	private static BufferedImage vicRouge;
 	
 	private KingAgent commandant;
 	private ArrayList<Agent> lstUnite;
@@ -160,6 +164,14 @@ public class Player {
 		}
 	}
 	
+	public BufferedImage getImageVictoire() {
+		if(_isRed) {
+			return vicRouge;
+		}else {
+			return vicBleue;
+		}
+	}
+	
 	public Color getColor() {
 		if(_isRed) {
 			return new Color(128,0,0);
@@ -202,6 +214,8 @@ public class Player {
 		try {
 			baniereRouge = ImageIO.read(new File(directory + File.separator + fileBaniereRouge));
 			baniereBleue = ImageIO.read(new File(directory + File.separator + fileBaniereBleue));
+			vicBleue = ImageIO.read(new File(directory + File.separator + fileVictoireBleue));
+			vicRouge = ImageIO.read(new File(directory + File.separator + fileVictoireRouge));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -216,8 +230,9 @@ public class Player {
 		return _algorithme.traiteEvent();
 	}
 
-	public void removeUnite(Agent aDEF) {
-		lstUnite.remove(aDEF);		
+	public void removeUnite(Agent agent) {
+		lstUnite.remove(agent);
+		_algorithme.remove(agent);
 	}
 
 	public float calcPowMilitaire() {

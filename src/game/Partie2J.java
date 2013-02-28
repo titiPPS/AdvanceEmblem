@@ -37,5 +37,10 @@ public class Partie2J implements Runnable {
 			}
 			fin = _jBleu.aPerdu() || _jRouge.aPerdu();
 		}
+		if(_jBleu.aPerdu()) {
+			_ge.finDePartie(_jRouge);
+		}else {
+			_ge.finDePartie(_jBleu);
+		}
 	}
 }

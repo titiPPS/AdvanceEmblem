@@ -173,18 +173,19 @@ public abstract class Terrain {
 	}
 
 
-	public String precisionToString() {
-		return "Pre : " + (int) (_coeffPre * 100) + " %";
-	}
-
 
 	public String defenseToString() {
-		return "Def : " + (int) (_coeffDef * 100) + " %";
+		return "Def : " + _def;
 	}
 
 
 	public void effetSurOccupantStart(Player p) {
 		
+	}
+
+
+	public String effetToString() {
+		return "-";
 	}
 
 

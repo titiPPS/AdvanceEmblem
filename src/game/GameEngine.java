@@ -58,7 +58,7 @@ public class GameEngine  {
 	
 	/*Evènements*/
 	private boolean eventEnCours = false;
-	private HashSet<Terrain> terrainsAccessibles;
+	private ArrayList<Terrain> terrainsAccessibles;
 	private HashMap<Integer,Terrain> terrainsATQ;
 	private Agent agentCourant;
 	private Factory usineCourante;
@@ -66,7 +66,7 @@ public class GameEngine  {
 	
 	public GameEngine(GUI usrInterface) {
 		_usrInterface = usrInterface;
-		terrainsAccessibles = new HashSet<Terrain>();
+		terrainsAccessibles = new ArrayList<Terrain>();
 	}
 	
 	/**
@@ -81,8 +81,8 @@ public class GameEngine  {
 		pRed.setCroissance(CROISSANCE_INIT);
 		joueurCourant = pRed;
 		pBlue = new Player(false);
-		pBlue.setAlgorithme(new AlgoHumain(pBlue));
-		//pBlue.setAlgorithme( new AlgoIA(pBlue,pRed));
+		//pBlue.setAlgorithme(new AlgoHumain(pBlue));
+		pBlue.setAlgorithme( new AlgoIA(pBlue,pRed,this));
 		pBlue.setRessources(RESSOURCES_INIT);
 		pBlue.setCroissance(CROISSANCE_INIT);
 		
@@ -466,5 +466,9 @@ public class GameEngine  {
 
 	public Terrain getTerrain(int x, int y) {
 		return carte.getTerrain(x, y);
+	}
+	
+	public void finDePartie(Player winner) {
+		_usrInterface.repaintMap(winner.getImageVictoire());
 	}
 }

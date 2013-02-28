@@ -65,5 +65,15 @@ public class Fort extends Terrain {
 			super._occupant.setPV(super._occupant.getPV() + GUERISON);
 		}
 	}
+	
+	@Override
+	public int getDef() {
+		return super._def + GUERISON;
+	}
+	
+	@Override
+	public String effetToString() {
+		return " + " + GUERISON + " PV";
+	}
 
 }

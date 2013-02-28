@@ -1,7 +1,9 @@
 package ia;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 
 import ui.GUI.EventUsine;
@@ -21,50 +23,45 @@ public class AlgoIA implements IAlgorithme{
 	private static float COEFF_MILITARY = 0.5f;
 	private static float COEFF_CROISSANCE = 0.3f;
 	private static int PEREQ_DELTA = 4;
+	private static int NB_GENERATION_RDM = 5;
 	
 	private Player _joueur,_ennemi;
 	
-	private float coeffRsrc, coeffMilitary,coeffCroissance;
 	private float probaSuper = 0.3f, probaBase = 0.35f,probaRsrc = 0.3f,probaNothing = 0.005f;
 	private Random randGenerator;
 	
-	public AlgoIA(Player joueur,Player ennemi) {
+	private HashMap<Agent,Comportement> mapComportement;
+	private Comportement cmdtComportement,bestComportement = null;
+	
+	public AlgoIA(Player joueur,Player ennemi,GameEngine ge) {
 		randGenerator = new Random();
 		this._joueur = joueur;
 		this._ennemi = ennemi;
-		coeffRsrc = COEFF_RSRC;
-		coeffMilitary = COEFF_MILITARY;
-		coeffCroissance = COEFF_CROISSANCE;
+		mapComportement = new HashMap<Agent,Comportement>();
+		cmdtComportement = new Comportement(ge, joueur, Float.MAX_VALUE, 10,10,10);
+		cmdtComportement.setDistribution(0.01f, 0.99f);
+		cmdtComportement.setCoeffLongTerme(0f);
+		cmdtComportement.setCoeffATQ(1.0f, 0.1f, 0.9f, 5f);
+		bestComportement = Comportement.comportementAleatoire(ge, joueur);
+		bestComportement.setScore(0);
 	}
 
 	@Override
 	public void jouer(GameEngine gEngine) {
 		//TODO Gestion des unites
 		for(Agent a : _joueur.getListOfUnite()) {
-			HashSet<Terrain> lstDest = PathFinder.listeDestination(gEngine.getTerrain(a.getX(), a.getY()), a.getMouvement());
-			Terrain[] tab = new Terrain[lstDest.size()];
-			tab = lstDest.toArray(tab);
-			int destination = randGenerator.nextInt(lstDest.size());
-			gEngine.deplacerAgent(gEngine.getTerrain(a.getX(), a.getY()), tab[destination], true);
+			gererAgent(a,gEngine);
 		}
 		
 		//TODO Gestion du commandant
 		Agent king = _joueur.getCommandant();
-		//On établit la liste des menaces pesant sur le commandant
-		ArrayList<Terrain> positionsMenaces = new ArrayList<Terrain>();
-		for(Agent a : _ennemi.getListOfUniteLarge()) {
-			if(a.getX() <= king.getX() + a.getMouvement() && a.getX() >= king.getX() + a.getMouvement()) {
-				if(a.getY() <= king.getY() + a.getMouvement() && a.getY() >= king.getY() + a.getMouvement()) {
-					positionsMenaces.add(gEngine.getTerrain(a.getX(),a.getY()));
-				}
-			}
-		}
+		gererAgent(king,gEngine,cmdtComportement);
 		
 		
 		
 		//TODO Gestion de la production
 		//Nouvelle estimation des menaces pesant sur le commandant
-		positionsMenaces = new ArrayList<Terrain>();
+		ArrayList<Terrain>positionsMenaces = new ArrayList<Terrain>();
 		for(Agent a : _ennemi.getListOfUniteLarge()) {
 			if(a.getX() <= king.getX() + a.getMouvement() && a.getX() >= king.getX() + a.getMouvement()) {
 				if(a.getY() <= king.getY() + a.getMouvement() && a.getY() >= king.getY() + a.getMouvement()) {
@@ -72,13 +69,73 @@ public class AlgoIA implements IAlgorithme{
 				}
 			}
 		}
+		bestComportement = findBestComportement();
 		
 		for(Factory usine : _joueur.getListOfFactory()) {
 			Terrain t = gEngine.getTerrain(usine.getX(), usine.getY());
 			if(t.getOccupant() == null) {
 				gEngine.construireAgent(_joueur, usine, determinerAction(positionsMenaces));
 			}
+			if(t.getOccupant() != null) {
+				if(randGenerator.nextDouble() < ((double)NB_GENERATION_RDM / (mapComportement.size() + 1))) {
+					mapComportement.put(t.getOccupant(),Comportement.comportementAleatoire(gEngine, _joueur));
+				}else {
+					mapComportement.put(t.getOccupant(),bestComportement.clone());
+				}
+			}
 		}
+	}
+	
+	/**
+	 * Methode permettant de déterminer le meilleur comportement parmi ceux
+	 * des unités encore vivantes et le meilleur comportement déterminé précédemment
+	 * 
+	 * @return le meilleur comportement
+	 */
+	private Comportement findBestComportement() {
+		Comportement best = null;
+		float max = - Float.MAX_VALUE;
+		for(Comportement c : mapComportement.values()) {
+			if(c.getScore() > max) {
+				best = c;
+				max = c.getScore();
+			}
+		}
+		if(bestComportement.getScore() < max)
+			return best;
+		else
+			return bestComportement;
+	}
+	
+	private void gererAgent(Agent a,GameEngine gEngine,Comportement c) {
+		float currentValue = _joueur.calcPowMilitaire() - _ennemi.calcPowMilitaire();
+		ArrayList<Terrain> lstDest = PathFinder.listeDestination(gEngine.getTerrain(a.getX(), a.getY()), a.getMouvement());
+		Terrain dest = c.choisirDestination(a, lstDest, _ennemi);
+		if(dest != null) {
+			gEngine.deplacerAgent(gEngine.getTerrain(a.getX(), a.getY()), dest, true);
+		}
+		lstDest = new ArrayList<Terrain>();
+		lstDest.addAll( gEngine.getTerrain(a.getX(), a.getY()).getListeVoisins());
+		for(int i = lstDest.size() - 1 ; i >=0 ; i --) {
+			Terrain t = lstDest.get(i);
+			if(t.getOccupant() == null || t.getOccupant().appartientA(_joueur)) {
+				lstDest.remove(i);
+			}
+		}
+		dest = c.choixATQ(lstDest, gEngine.getTerrain(a.getX(), a.getY()), a);
+		if(dest != null) {
+			gEngine.attaquer(gEngine.getTerrain(a.getX(), a.getY()), dest);
+		}
+		currentValue -= _joueur.calcPowMilitaire() - _ennemi.calcPowMilitaire();
+		if(!a.isDead()) {
+			c.setScore(c.getScore() + 0.1f + currentValue );
+		}
+	}
+	
+	private void gererAgent(Agent a,GameEngine gEngine) {
+		Comportement c = mapComportement.get(a);
+		c = (c == null ? bestComportement.clone() : c);
+		gererAgent(a, gEngine, c);
 	}
 	
 	public EventUsine determinerAction(ArrayList<Terrain> positionsMenaces) {
@@ -238,9 +295,12 @@ public class AlgoIA implements IAlgorithme{
 	}
 
 	@Override
-	public void setFinDeTour(boolean b) {
-		// TODO Auto-generated method stub
-		
+	public void setFinDeTour(boolean b) {		
+	}
+
+	@Override
+	public void remove(Agent agent) {
+		mapComportement.remove(agent);
 	}
 
 }

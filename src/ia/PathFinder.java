@@ -24,8 +24,8 @@ public class PathFinder {
 		return resultat;
 	}
 	
-	public static HashSet<Terrain> listeDestination(Terrain init, int mouvement) {
-		HashSet<Terrain> resultat = new HashSet<Terrain>();
+	public static ArrayList<Terrain> listeDestination(Terrain init, int mouvement) {
+		ArrayList<Terrain> resultat = new ArrayList<Terrain>();
 		ArrayList<Terrain> dejaVu = new ArrayList<Terrain>();
 		ArrayList<Terrain> enCours = new ArrayList<Terrain>();
 		enCours.add(init);

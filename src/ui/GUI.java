@@ -376,8 +376,8 @@ public class GUI extends JFrame {
 			barrePV.setVisible(false);
 			lblTypeInfo.setText(t.getName());
 			if(t.getAccessible()) {
-				lblInfo1.setText(t.precisionToString());
-				lblInfo2.setText(t.defenseToString());
+				lblInfo1.setText(t.defenseToString());
+				lblInfo2.setText(t.effetToString());
 			}else {
 				lblInfo1.setText("Non");
 				lblInfo2.setText("Accessible");

@@ -1,5 +1,6 @@
 package ia;
 
+import engine.Agent;
 import engine.Player;
 import game.GameEngine;
 
@@ -34,6 +35,12 @@ public class AlgoHumain implements IAlgorithme{
 	@Override
 	public void setFinDeTour(boolean b) {
 		_finDeTour = b;
+		
+	}
+
+
+	@Override
+	public void remove(Agent agent) {
 		
 	}
 

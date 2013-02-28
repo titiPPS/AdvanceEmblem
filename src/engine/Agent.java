@@ -142,7 +142,7 @@ public abstract class Agent{
 		return GameEngine.COUT_BASE;
 	}
 	public void setPV(int newPV) {
-		_pv = newPV;
+		_pv = (newPV > _pvMax ? _pvMax : newPV);
 	}
 	
 	public boolean equals(Object o) {
@@ -156,6 +156,7 @@ public abstract class Agent{
 	public static int valueOf(Agent a) {
 		return (a.getAtq() + a.getDef()) * a.getPV() / a.getPrix();
 	}
+	
 	
 	public abstract int getIDClass();
 	public abstract int[] getFaiblesses();

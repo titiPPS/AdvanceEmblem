@@ -165,6 +165,8 @@ public abstract class Terrain {
 			return new Mountain(x,y);
 		case Water.ID_TERRAIN :
 			return new Water(x,y);
+		case Fort.ID_TERRAIN :
+			return new Fort(x,y);
 		default :
 			return new Grass(x,y);
 		}
@@ -178,6 +180,11 @@ public abstract class Terrain {
 
 	public String defenseToString() {
 		return "Def : " + (int) (_coeffDef * 100) + " %";
+	}
+
+
+	public void effetSurOccupantStart(Player p) {
+		
 	}
 
 

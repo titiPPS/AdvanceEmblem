@@ -54,7 +54,7 @@ public class Comportement {
 	
 	public Terrain choisirDestination(Agent agent, ArrayList<Terrain> lstTerrain, Player ennemi) {
 		if(Math.random() < pLongTerme) {
-			return evaluerDestination(lstTerrain);
+			return evaluerDestination(agent,lstTerrain);
 		}else {
 			return destinationObjectif(agent,ennemi);
 		}
@@ -124,17 +124,33 @@ public class Comportement {
 		return resultat;
 	}
 	
-	public Terrain evaluerDestination(ArrayList<Terrain> lstTerrain) {
+	public Terrain evaluerDestination(Agent agent,ArrayList<Terrain> lstTerrain) {
 		Terrain res = null;
 		float[] scores = new float[lstTerrain.size()];
 		for(int i = 0 ; i < lstTerrain.size(); i ++) {
-			scores[i] = evaluerTerrain(lstTerrain.get(i));
+			scores[i] = evaluerTerrain(agent,lstTerrain.get(i));
 		}
 		return res;
 	}
 	
-	private float evaluerTerrain(Terrain terrain) {
+	private float evaluerTerrain(Agent a,Terrain terrain) {
 		float score = 0f;
+		int alliesAdj = 0, ennemiAdj = 0;
+		int dmgInfl = 0,dmgRec = 0,nbTues = 0,nbMorts = 0;
+		ArrayList<Terrain> tmp = terrain.getListeVoisins();
+		/*Calcul du nombre de cibles et du nombre d'alliés*/
+		for(Terrain t : tmp) {
+			if(t.getOccupant() != null) {
+				if(t.getOccupant().appartientA(_joueur)) {
+					alliesAdj++;
+				}else {
+					ennemiAdj++;
+					dmgInfl = a.calculDegats(t.getOccupant(), t);
+					nbTues = (t.getOccupant().getPV() - dmgInfl > 0 ? nbTues : nbTues + 1);
+					dmgRec = t.getOccupant().calculDegats(a, terrain);
+				}
+			}
+		}
 		return 0;
 	}
 
@@ -202,7 +218,7 @@ public class Comportement {
 		HashSet<Terrain> set = PathFinder.listeDestination( gEngine.getTerrain( a.getX(), a.getY()), a.getMouvement());
 		ArrayList<Terrain> al = new ArrayList<Terrain>();
 		al.addAll(set);
-		return evaluerDestination(al);
+		return evaluerDestination(a,al);
 	}
 
 }

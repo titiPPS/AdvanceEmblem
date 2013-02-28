@@ -22,6 +22,7 @@ import engine.AxeAgent;
 import engine.Curseur;
 import engine.Factory;
 import engine.Forest;
+import engine.Fort;
 import engine.Grass;
 import engine.HorseAgent;
 import engine.KingAgent;
@@ -170,6 +171,8 @@ public class GameEngine  {
 		Mountain.initImage(dir);
 		Forest.initImage(dir);
 		Water.initImage(dir);
+		Fort.initImage(dir);
+		
 		Factory.initImage(dir);
 		
 		/*Agents*/
@@ -445,6 +448,11 @@ public class GameEngine  {
 	
 	public void initJoueurCourant(Player p) {		
 		joueurCourant = p;
+		for(int x = 0 ; x < carte.getWidth() ; x++) {
+			for(int y = 0; y < carte.getHeight() ; y++) {
+				carte.getTerrain(x, y).effetSurOccupantStart(joueurCourant);
+			}
+		}
 		carte.setPosCurseur(p);
 		_usrInterface.repaintMap(carte.getImage());
 		_usrInterface.repaintPaneauCtrl(carte.getTerrainCurseur());

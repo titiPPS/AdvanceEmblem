@@ -139,7 +139,11 @@ public class Comportement {
 	}
 
 	public Terrain destinationObjectif(Agent a,Player ennemi) {
+		Terrain init = gEngine.getTerrain(a.getX(), a.getY());
 		if(objATQ > objDEF) {
+			Agent comdt = ennemi.getCommandant();
+			Terrain dest = gEngine.getTerrain(comdt.getX(), comdt.getY());
+			ArrayList<Terrain> cheminToCmdt = PathFinder.aStarForATQ(init, dest, a.getMouvement(), _joueur);
 			
 		}else {
 			boolean xCondition = (a.getX() + a.getMouvement() >= _joueur.getCommandant().getX() && a.getX() - a.getMouvement() <= _joueur.getCommandant().getX());
@@ -154,7 +158,6 @@ public class Comportement {
 					}
 				});
 				Terrain[] tab = new Terrain[a.getMouvement()];
-				Terrain init = gEngine.getTerrain(a.getX(), a.getY());
 				ArrayList<Terrain> chemin;
 				
 				/*On évalue la menace la plus pertinente (il vaut mieux tuer qqn
@@ -176,7 +179,7 @@ public class Comportement {
 				//on essaye de rejoindre le commandant et on dézingue ce qu'il y a sur le chemin
 				boolean destinationFound = false;
 				int cpt = 0;
-				Terrain init = gEngine.getTerrain(_joueur.getCommandant().getX(), _joueur.getCommandant().getY());
+				//Terrain init = gEngine.getTerrain(_joueur.getCommandant().getX(), _joueur.getCommandant().getY());
 				ArrayList<Terrain> al;
 				HashSet<Terrain> lstDestCmdt = PathFinder.listeDestination(init, _joueur.getCommandant().getMouvement());
 				Terrain[] tab = new Terrain[lstDestCmdt.size()];

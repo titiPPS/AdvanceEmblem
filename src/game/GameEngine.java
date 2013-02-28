@@ -45,7 +45,7 @@ public class GameEngine  {
 	
 	public final static int COUT_AUGMENTATION_RESSOURCES = 30;
 	public final static int COUT_BASE = 50;
-	public final static int COUT_SUPER = 250;
+	public final static int COUT_SUPER = 200;
 	public static final int AUGMENTATION_CROISSANCE = 5;
 	public static final int RESSOURCES_INIT = 500;
 	public static final int CROISSANCE_INIT = 10;
@@ -80,7 +80,8 @@ public class GameEngine  {
 		pRed.setCroissance(CROISSANCE_INIT);
 		joueurCourant = pRed;
 		pBlue = new Player(false);
-		pBlue.setAlgorithme( new AlgoIA(pBlue,pRed));
+		pBlue.setAlgorithme(new AlgoHumain(pBlue));
+		//pBlue.setAlgorithme( new AlgoIA(pBlue,pRed));
 		pBlue.setRessources(RESSOURCES_INIT);
 		pBlue.setCroissance(CROISSANCE_INIT);
 		

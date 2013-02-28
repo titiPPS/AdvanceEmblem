@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class SpearAgent extends Agent {
-	private final static int SPEEDSPEAR = 5;
+	private final static int SPEEDSPEAR = 6;
 	private final static int POINTSDEVIE = 10;
 	private final static int ATQ = 7;
 	private final static int DEF = 1;

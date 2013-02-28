@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class SwordAgent extends Agent{
-	private final static int SPEEDSWORD = 5;
+	private final static int SPEEDSWORD = 6;
 	private final static int POINTSDEVIE = 10;
 	private final static int ATQ = 7;
 	private final static int DEF = 1;

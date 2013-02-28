@@ -38,11 +38,11 @@ public class AlgoIA implements IAlgorithme{
 		this._joueur = joueur;
 		this._ennemi = ennemi;
 		mapComportement = new HashMap<Agent,Comportement>();
-		cmdtComportement = new Comportement(ge, joueur, Float.MAX_VALUE, 10,10,10);
+		cmdtComportement = new Comportement(ge, joueur,_ennemi, Float.MAX_VALUE, 10,10,10);
 		cmdtComportement.setDistribution(0.01f, 0.99f);
 		cmdtComportement.setCoeffLongTerme(0f);
 		cmdtComportement.setCoeffATQ(1.0f, 0.1f, 0.9f, 5f);
-		bestComportement = Comportement.comportementAleatoire(ge, joueur);
+		bestComportement = Comportement.comportementAleatoire(ge, joueur,_ennemi);
 		bestComportement.setScore(0);
 	}
 
@@ -78,7 +78,7 @@ public class AlgoIA implements IAlgorithme{
 			}
 			if(t.getOccupant() != null) {
 				if(randGenerator.nextDouble() < ((double)NB_GENERATION_RDM / (mapComportement.size() + 1))) {
-					mapComportement.put(t.getOccupant(),Comportement.comportementAleatoire(gEngine, _joueur));
+					mapComportement.put(t.getOccupant(),Comportement.comportementAleatoire(gEngine, _joueur,_ennemi));
 				}else {
 					mapComportement.put(t.getOccupant(),bestComportement.clone());
 				}
@@ -107,6 +107,14 @@ public class AlgoIA implements IAlgorithme{
 			return bestComportement;
 	}
 	
+	/**
+	 * Methode permettant de réaliser la décision d'un agent, selon son
+	 * comportement associé.
+	 * 
+	 * @param a : l'agent concerné
+	 * @param gEngine : le moteur du jeu
+	 * @param c : le comportement de l'agent concerné
+	 */
 	private void gererAgent(Agent a,GameEngine gEngine,Comportement c) {
 		float currentValue = _joueur.calcPowMilitaire() - _ennemi.calcPowMilitaire();
 		ArrayList<Terrain> lstDest = PathFinder.listeDestination(gEngine.getTerrain(a.getX(), a.getY()), a.getMouvement());
@@ -132,12 +140,28 @@ public class AlgoIA implements IAlgorithme{
 		}
 	}
 	
+	/**
+	 * Methode permettant de réaliser la décision d'un agent, selon son
+	 * comportement associé. Ce comportement sera celui stocké dans la map
+	 * des comportements ou le meilleur comportement actuel si aucun comportement n'est trouvé.
+	 * 
+	 * La gestion sera faite ensuite par la méthode éponyme.
+	 * 
+	 * @param a : l'agent concerné
+	 * @param gEngine : le moteur du jeu
+	 */
 	private void gererAgent(Agent a,GameEngine gEngine) {
 		Comportement c = mapComportement.get(a);
 		c = (c == null ? bestComportement.clone() : c);
 		gererAgent(a, gEngine, c);
 	}
 	
+	/**
+	 * Methode permettant de déterminer l'action d'une usine pour le tour courant.
+	 * 
+	 * @param positionsMenaces
+	 * @return l'évenement usine associé à la décision
+	 */
 	public EventUsine determinerAction(ArrayList<Terrain> positionsMenaces) {
 		float pNothing = probaNothing, pRsrc = probaRsrc, pBase = probaBase, pSuper = probaSuper;
 		float currentPowJoueur = _joueur.calcPowMilitaire(), currentPowEnnemi = _ennemi.calcPowMilitaire();
@@ -209,6 +233,13 @@ public class AlgoIA implements IAlgorithme{
 		return resultat;
 	}
 	
+	/**
+	 * Methode permettant d'obtenir une instance d'agent à des fins de test à partir
+	 * d'un eventUsinse
+	 * 
+	 * @param eu
+	 * @return l'instance de test correspondant
+	 */
 	private Agent getInstanceFromEU(EventUsine eu) {
 		switch (eu) {
 		case axe :

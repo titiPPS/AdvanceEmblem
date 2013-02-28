@@ -13,17 +13,18 @@ import game.GameEngine;
 
 public class Comportement {
 	
-	private Player _joueur;
+	private Player _joueur,_ennemi;
 	private GameEngine gEngine;
 	private float score = 0f;
 	
 	private static int MAX_COEFF = 200;
 	private static int MIN_COEFF = 10;
-
+	private static int MAX_TURNS_LONG_TERME = 6;
 	private float penaliteMort,recompenseCmdt,recUsine,penUsine;
 	
 	/*Long terme*/
 	private float pLongTerme;
+	private int longTermeTurnsLeft = 0;
 	
 	/*ATQ*/
 	private float coeffTuer,coeffDmgInfl,coeffDmgRec,coeffCibleCommune;
@@ -31,8 +32,9 @@ public class Comportement {
 	/*Type de comportement*/
 	private float objDEF,objATQ;
 	
-	public Comportement(GameEngine ge,Player joueur,float penaliteMort,float recompenseCmdt,float recUsine, float penUsine) {
+	public Comportement(GameEngine ge,Player joueur,Player ennemi,float penaliteMort,float recompenseCmdt,float recUsine, float penUsine) {
 		this._joueur = joueur;
+		this._ennemi = ennemi;
 		this.gEngine = ge;
 		this.penaliteMort = penaliteMort;
 		this.recompenseCmdt = recompenseCmdt;
@@ -85,10 +87,16 @@ public class Comportement {
 	 * @return la destination choisie (ou null si pas de déplacement)
 	 */
 	public Terrain choisirDestination(Agent agent, ArrayList<Terrain> lstTerrain, Player ennemi) {
-		if(Math.random() < pLongTerme) {
-			return evaluerDestination(agent,lstTerrain);
-		}else {
+		if(longTermeTurnsLeft > 0) {
+			longTermeTurnsLeft --;
 			return destinationObjectif(agent,ennemi);
+		}else {
+			if(Math.random() < pLongTerme) {
+				return evaluerDestination(agent,lstTerrain);
+			}else {
+				longTermeTurnsLeft = (int)(Math.random() * MAX_TURNS_LONG_TERME);
+				return destinationObjectif(agent,ennemi);
+			}
 		}
 	}
 	
@@ -194,6 +202,12 @@ public class Comportement {
 		return res;
 	}
 	
+	/**
+	 * 
+	 * @param a
+	 * @param terrain
+	 * @return
+	 */
 	private float evaluerTerrain(Agent a,Terrain terrain) {
 		float score = 0f;
 		if(terrain.getUsine() != null) {
@@ -239,8 +253,10 @@ public class Comportement {
 			}
 		}
 		
-		score += (terrain.getDef() + alliesAdj - (dmgRec > a.getPVMax() ? a.getPVMax() : dmgRec) - 2 * nbMorts) * objDEF;
-		score += (dmgInfl + nbTues * 2 + (ennemiAdj > 4 ? 4 - ennemiAdj : ennemiAdj)) * objATQ; 
+		score += (((terrain.getDef() + alliesAdj) / (1+dmgRec)) - 2 * nbMorts * penaliteMort) * 10 * objDEF;
+		score += (dmgInfl + nbTues * 2 * coeffTuer + ennemiAdj) *10 * objATQ; 
+		score += (objATQ / 2) * (Math.abs(_ennemi.getCommandant().getX() - terrain.getX()) + Math.abs(_ennemi.getCommandant().getY() - terrain.getY()));
+		score += (objDEF / 2) * (Math.abs(_joueur.getCommandant().getX() - terrain.getX()) + Math.abs(_joueur.getCommandant().getY() - terrain.getY()));
 		return score;
 	}
 
@@ -256,10 +272,7 @@ public class Comportement {
 						return cheminToCmdt.get(j - 1);
 					}
 				}
-			}else {
-				
 			}
-			
 		}else {
 			boolean xCondition = (a.getX() + a.getMouvement() >= _joueur.getCommandant().getX() && a.getX() - a.getMouvement() <= _joueur.getCommandant().getX());
 			boolean yCondition = (a.getY() + a.getMouvement() >= _joueur.getCommandant().getY() && a.getY() - a.getMouvement() <= _joueur.getCommandant().getY());
@@ -312,17 +325,17 @@ public class Comportement {
 	}
 	
 	public Comportement clone() {
-		Comportement c = new Comportement(gEngine, _joueur, penaliteMort, recompenseCmdt,recUsine,penUsine);
+		Comportement c = new Comportement(gEngine, _joueur,_ennemi, penaliteMort, recompenseCmdt,recUsine,penUsine);
 		c.setCoeffATQ(coeffTuer, coeffDmgInfl, coeffDmgRec, coeffCibleCommune);
 		c.setCoeffLongTerme(pLongTerme);
 		c.setDistribution(objATQ, objDEF);
 		return c;
 	}
 	
-	public static Comportement comportementAleatoire(GameEngine ge, Player p) {
-		Comportement c = new Comportement(ge, p,MIN_COEFF + (float)Math.random() * MAX_COEFF, MIN_COEFF + (float)Math.random() * MAX_COEFF
+	public static Comportement comportementAleatoire(GameEngine ge, Player p,Player ennemi) {
+		Comportement c = new Comportement(ge, p,ennemi,MIN_COEFF + (float)Math.random() * MAX_COEFF, MIN_COEFF + (float)Math.random() * MAX_COEFF
 				,MIN_COEFF + (float)Math.random() * MAX_COEFF,MIN_COEFF + (float)Math.random() * MAX_COEFF);
-		c.setCoeffATQ( (float)Math.random(), (float) Math.random(), (float)Math.random(), (float)Math.random());
+		c.setCoeffATQ( (float)Math.random() * MIN_COEFF, (float) Math.random() * MIN_COEFF, (float)Math.random()* MIN_COEFF, (float)Math.random()* MIN_COEFF);
 		c.setCoeffLongTerme((float)Math.random());
 		c.setDistribution((float)Math.random(), (float)Math.random());
 		return c;

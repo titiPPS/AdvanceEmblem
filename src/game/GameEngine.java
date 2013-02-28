@@ -411,11 +411,17 @@ public class GameEngine  {
 				if(aDEF.isDead()) {
 					aDEF.getJoueur().removeUnite(aDEF);
 					tDEF.setOccupant(null);
+					if(aDEF.getJoueur().getCommandant().equals(aDEF)) {
+						aDEF.getJoueur().finDeTour();
+					}
 				}else {
 					aATQ.setPV(aATQ.getPV() - aDEF.calculDegats(aATQ, tATQ));
 					if(aATQ.isDead()) {
 						aATQ.getJoueur().removeUnite(aATQ);
 						tATQ.setOccupant(null);
+						if(aATQ.getJoueur().getCommandant().equals(aATQ)) {
+							aATQ.getJoueur().finDeTour();
+						}
 					}
 				}
 			}

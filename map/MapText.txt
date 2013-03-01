@@ -11,7 +11,7 @@ facBlue=35:15
 facBlue=37:15
 facBlue=35:17
 facBlue=37:17
-//La map est encodée selon les spec suivantes : 1 -> herbe, 2 -> foret, 3 -> montagne 
+//La map est encodée selon les spec suivantes : 1 -> herbe, 2 -> foret, 3 -> montagne, 4 -> eau, 5 -> fort
 startMap
 3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:4:4:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3:3
 3:3:2:1:1:2:3:3:3:2:1:2:2:2:2:2:3:3:3:3:4:1:1:1:1:1:1:1:1:2:2:1:1:1:1:1:1:1:1:3
